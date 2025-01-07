@@ -124,7 +124,7 @@ jobs:
         with:
           url: ${{ steps.deployment.outputs.page_url }}
           token: ${{ secrets.AUTOMAGICALLY_TOKEN }}
-          testTargetId: 17866147-c69e-481a-9b8e-90f3ae565779
+          testTargetId: ${{ secrets.AUTOMAGICALLY_TEST_TARGET_ID }}
           blocking: true
 
       - name: Report Status
