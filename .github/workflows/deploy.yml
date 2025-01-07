@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ['main']
+  pull_request:
+    branches: ['main']
 
   workflow_dispatch:
 
@@ -47,5 +49,13 @@ jobs:
           
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v2
+
+      - name: Run Octomind E2E tests
+        uses: OctoMind-dev/automagically-action-execute@v2
+        with:
+          url: https://deriv-com.github.io/copy-trading/
+          token: ${{ secrets.AUTOMAGICALLY_TOKEN }}
+          testTargetId: 17866147-c69e-481a-9b8e-90f3ae565779
+          blocking: false
 
