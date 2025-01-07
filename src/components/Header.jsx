@@ -3,6 +3,8 @@ import AccountSelector from "./AccountSelector";
 import { getConfig } from "../config";
 import derivIcon from "../assets/deriv-icon.svg";
 import { useAuth } from "../hooks/useAuth.jsx";
+import useBalance from "../hooks/useBalance";
+import useLogout from "../hooks/useLogout";
 
 const Header = () => {
     const {
@@ -12,10 +14,18 @@ const Header = () => {
         isAuthorized,
         isLoading,
     } = useAuth();
+    const balances = useBalance();
     const config = getConfig();
-    const handleLogout = () => {
-        clearAccounts();
-        window.location.href = "/copy-trading/";
+    const { logout } = useLogout();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            clearAccounts();
+            window.location.href = "/copy-trading/";
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     const handleDerivLogin = () => {
@@ -58,6 +68,7 @@ const Header = () => {
                                         defaultAccount={defaultAccount}
                                         otherAccounts={otherAccounts}
                                         onLogout={handleLogout}
+                                        balances={balances}
                                     />
                                 ) : (
                                     <Button
