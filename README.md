@@ -11,7 +11,7 @@ A React-based copy trading application built with modern tools and technologies.
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - npm (v6 or higher)
 
 ## Getting Started
