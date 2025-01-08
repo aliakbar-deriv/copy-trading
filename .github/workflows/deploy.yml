@@ -69,6 +69,15 @@ jobs:
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      
+      - name: Clean up artifacts
+        run: |
+          echo "Cleaning up any existing artifacts..."
+          gh api repos/${{ github.repository }}/actions/artifacts \
+            --paginate -q '.artifacts[] | select(.name=="github-pages") | .id' \
+            | xargs -I {} gh api repos/${{ github.repository }}/actions/artifacts/{} -X DELETE || true
+        env:
+          GH_TOKEN: ${{ github.token }}
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
