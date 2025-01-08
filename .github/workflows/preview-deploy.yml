@@ -6,13 +6,17 @@ on:
     branches: ['main']
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-  pull-requests: write
-  deployments: write
-  statuses: write
-  actions: write    # Full permission to manage artifacts
+  contents: read        # Read repository contents
+  pages: write         # Deploy to GitHub Pages
+  id-token: write      # Use OIDC tokens
+  pull-requests: write # Comment on PRs
+  deployments: write   # Manage deployments
+  statuses: write      # Update commit statuses
+  actions: write       # Manage artifacts and workflow runs
+  checks: write        # Update check runs and E2E test results
+  issues: write        # Update issues (if needed for notifications)
+  discussions: write   # Update discussions (if needed for notifications)
+  security-events: read # Read security events for E2E tests
 
 concurrency:
   group: "preview-${{ github.event.pull_request.number }}"
