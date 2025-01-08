@@ -11,6 +11,7 @@ permissions:
   id-token: write
   deployments: write
   statuses: write
+  actions: read    # Add permission to read artifacts
 
 concurrency:
   group: "pages"
@@ -72,11 +73,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
-          name: github-pages
+          path: ./dist
           
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
-        with:
-          artifact_name: github-pages
