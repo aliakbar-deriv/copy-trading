@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useContext } from 'react';
 import useWebSocket from "./useWebSocket";
-import { AuthContext } from './authContext.jsx';
+import { AuthContext } from '../contexts/auth';
 
 export const useAuthState = () => {
     const [isAuthorized, setIsAuthorized] = useState(false);

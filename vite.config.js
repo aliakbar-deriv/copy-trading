@@ -23,11 +23,20 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
       deps: {
-        inline: ['@deriv-com/quill-ui']
+        optimizer: {
+          web: {
+            include: ['@deriv-com/quill-ui']
+          }
+        }
       },
       mockReset: true,
       moduleNameMapper: {
-        '\\.(css|less|sass|scss)$': './src/test/mocks/styleMock.js'
+        '\\.(css|less|sass|scss)$': './src/test/mocks/styleMock.js',
+        '^@deriv-com/quill-ui/.*\\.css$': './src/test/mocks/styleMock.js'
+      },
+      transformMode: {
+        web: [/\.[jt]sx?$/],
+        ssr: [/\.css$/]
       }
     },
     plugins: [
@@ -46,7 +55,7 @@ export default defineConfig(({ mode }) => {
           name: 'Deriv Copy Trading',
           short_name: 'Copy Trading',
           description: 'Copy successful traders and automatically replicate their trading strategies in real-time.',
-          theme_color: '#FF444F',
+          theme_color: '#FFFFFF',
           background_color: '#FFFFFF',
           display: 'standalone',
           start_url: '/copy-trading/',
