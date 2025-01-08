@@ -55,7 +55,7 @@ export default defineConfig(({ mode }) => {
           name: 'Deriv Copy Trading',
           short_name: 'Copy Trading',
           description: 'Copy successful traders and automatically replicate their trading strategies in real-time.',
-          theme_color: '#FF444F',
+          theme_color: '#FFFFFF',
           background_color: '#FFFFFF',
           display: 'standalone',
           start_url: '/copy-trading/',
