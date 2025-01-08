@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch all history for all branches and tags
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
@@ -58,10 +58,10 @@ jobs:
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
@@ -75,27 +75,40 @@ jobs:
           VITE_APP_ENV: preview
           
       - name: Cache build output
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: dist
           key: ${{ runner.os }}-build-${{ github.sha }}
         
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
         
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
           
       - name: Deploy PR Preview
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
         with:
           preview: true
 
+      - name: Handle Deploy Failure
+        if: failure() && steps.deployment.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Preview deployment failed. Check the workflow logs for details.'
+            });
+            core.setFailed('Preview deployment failed');
+
       - name: Comment PR
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const url = `${{ steps.deployment.outputs.page_url }}`;
@@ -129,7 +142,7 @@ jobs:
 
       - name: Report Workflow Status
         if: always()
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const { owner, repo } = context.repo;
