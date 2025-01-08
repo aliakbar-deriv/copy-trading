@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import ProtectedRoute from '../ProtectedRoute'
-import { AuthContext } from '../../hooks/authContext.jsx'
+import { AuthContext } from '../../contexts/auth'
 
 const mockAuthContext = {
     defaultAccount: null,

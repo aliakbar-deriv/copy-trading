@@ -23,11 +23,20 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
       deps: {
-        inline: ['@deriv-com/quill-ui']
+        optimizer: {
+          web: {
+            include: ['@deriv-com/quill-ui']
+          }
+        }
       },
       mockReset: true,
       moduleNameMapper: {
-        '\\.(css|less|sass|scss)$': './src/test/mocks/styleMock.js'
+        '\\.(css|less|sass|scss)$': './src/test/mocks/styleMock.js',
+        '^@deriv-com/quill-ui/.*\\.css$': './src/test/mocks/styleMock.js'
+      },
+      transformMode: {
+        web: [/\.[jt]sx?$/],
+        ssr: [/\.css$/]
       }
     },
     plugins: [
