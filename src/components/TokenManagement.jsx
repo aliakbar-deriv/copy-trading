@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TextField, Button, Text, SectionMessage } from "@deriv-com/quill-ui";
 import TokenContainer from "./TokenContainer";
 import useAPIToken from "../hooks/useAPIToken";
@@ -16,7 +16,7 @@ const TokenManagement = () => {
     const [error, setError] = useState("");
     const [isValidInput, setIsValidInput] = useState(true);
 
-    const fetchTokens = async () => {
+    const fetchTokens = useCallback(async () => {
         setIsLoading(true);
         try {
             const response = await getTokens();
@@ -31,11 +31,11 @@ const TokenManagement = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [getTokens]);
 
     useEffect(() => {
         fetchTokens();
-    }, []);
+    }, [fetchTokens]);
 
     const handleCreateToken = async () => {
         if (!tokenName.trim()) return;

@@ -16,7 +16,7 @@ const TraderStatistics = () => {
         if (defaultAccount?.account) {
             fetchStats();
         }
-    }, [defaultAccount?.account]);
+    }, [defaultAccount?.account, fetchStats]);
 
     if (error) {
         return (

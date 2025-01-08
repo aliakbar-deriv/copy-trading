@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { Skeleton } from "@deriv-com/quill-ui"
+import PropTypes from 'prop-types'
 
 const ProtectedRoute = ({ children }) => {
     const { defaultAccount, isLoading } = useAuth()
@@ -10,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50" data-testid="loading-container">
                 <div className="max-w-6xl mx-auto p-6">
                     {/* User Type Selection Shimmer */}
                     <div className="flex justify-center mb-8">
@@ -57,6 +58,10 @@ const ProtectedRoute = ({ children }) => {
     }
 
     return children
+}
+
+ProtectedRoute.propTypes = {
+    children: PropTypes.node.isRequired
 }
 
 export default ProtectedRoute

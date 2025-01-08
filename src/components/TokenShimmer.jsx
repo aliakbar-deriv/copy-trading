@@ -1,5 +1,3 @@
-import React from "react";
-
 const TokenShimmer = () => {
     return (
         <div className="animate-pulse space-y-6">

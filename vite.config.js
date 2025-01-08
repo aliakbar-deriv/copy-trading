@@ -3,10 +3,11 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { PROD_CONFIG } from './src/config'
 
+/// <reference types="vitest" />
+
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production'
   const env = loadEnv(mode, process.cwd(), '')
-  const isDev = mode === 'development'
   const base = '/copy-trading/'
 
   console.log('Loaded environment variables:', {
@@ -17,6 +18,18 @@ export default defineConfig(({ mode }) => {
 
   return {
     base,
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./src/test/setup.ts'],
+      deps: {
+        inline: ['@deriv-com/quill-ui']
+      },
+      mockReset: true,
+      moduleNameMapper: {
+        '\\.(css|less|sass|scss)$': './src/test/mocks/styleMock.js'
+      }
+    },
     plugins: [
       react(),
       VitePWA({

@@ -1,14 +1,10 @@
-import { useState, useCallback, useEffect, createContext, useContext } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
 import useWebSocket from "./useWebSocket";
-import PropTypes from 'prop-types';
-
-const AuthContext = createContext(null);
-
-// Singleton state
-let isAuthorizedGlobal = false;
-let authErrorGlobal = null;
+import { AuthContext } from './authContext.jsx';
 
 export const useAuthState = () => {
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [authError, setAuthError] = useState(null);
     const [defaultAccount, setDefaultAccount] = useState(null);
     const [otherAccounts, setOtherAccounts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -44,18 +40,18 @@ export const useAuthState = () => {
                 setIsLoading(false);
                 if (response.error) {
                     console.error("Authorization failed:", response.error);
-                    authErrorGlobal = response.error;
-                    isAuthorizedGlobal = false;
+                    setAuthError(response.error);
+                    setIsAuthorized(false);
                     clearAccounts();
                     close();
                 } else {
                     console.log("Authorization successful");
-                    authErrorGlobal = null;
-                    isAuthorizedGlobal = true;
+                    setAuthError(null);
+                    setIsAuthorized(true);
                 }
             });
         }
-    }, [isConnected, defaultAccount, sendMessage, close]);
+    }, [isConnected, defaultAccount, sendMessage, close, clearAccounts]);
 
     const updateAccounts = useCallback((newDefaultAccount, newOtherAccounts) => {
         console.log('Updating accounts:', { newDefaultAccount, newOtherAccounts });
@@ -88,15 +84,15 @@ export const useAuthState = () => {
                 setIsLoading(false);
                 if (response.error) {
                     console.error("Authorization failed:", response.error);
-                    authErrorGlobal = response.error;
-                    isAuthorizedGlobal = false;
+                    setAuthError(response.error);
+                    setIsAuthorized(false);
                     clearAccounts();
                     close();
                     reject(response.error);
                 } else {
                     console.log("Authorization successful");
-                    authErrorGlobal = null;
-                    isAuthorizedGlobal = true;
+                    setAuthError(null);
+                    setIsAuthorized(true);
                     resolve(response);
                 }
             });
@@ -107,18 +103,13 @@ export const useAuthState = () => {
         defaultAccount,
         otherAccounts,
         isLoading,
-        isAuthorized: isAuthorizedGlobal,
-        authError: authErrorGlobal,
+        isAuthorized,
+        authError,
         isConnected,
         updateAccounts,
         clearAccounts,
         authorize
     };
-};
-
-export const AuthProvider = ({ children }) => {
-    const auth = useAuthState();
-    return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
@@ -127,10 +118,6 @@ export const useAuth = () => {
         throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
-};
-
-AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired,
 };
 
 export default useAuth;
